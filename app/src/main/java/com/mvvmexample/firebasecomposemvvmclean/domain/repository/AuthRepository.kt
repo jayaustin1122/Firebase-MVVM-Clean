@@ -1,5 +1,6 @@
 package com.mvvmexample.firebasecomposemvvmclean.domain.repository
 
+import com.google.firebase.auth.AuthCredential
 import com.mvvmexample.firebasecomposemvvmclean.domain.model.Resource
 import com.mvvmexample.firebasecomposemvvmclean.domain.model.User
 import kotlinx.coroutines.flow.Flow
@@ -11,4 +12,5 @@ interface AuthRepository {
     fun getUser(): Flow<Resource<User>>
     fun updateUser(user: User): Flow<Resource<User>>
     fun isUserAuthenticated(): Boolean
+    fun signInWithGoogle(credential: AuthCredential): Flow<Resource<User>>
 }

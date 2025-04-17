@@ -1,7 +1,10 @@
 package com.mvvmexample.firebasecomposemvvmclean.data.source
 
+import android.util.Log
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.mvvmexample.firebasecomposemvvmclean.domain.model.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -33,7 +36,7 @@ class FirebaseAuthDataSource @Inject constructor() {
         }
     }
 
-     fun logout() {
+    fun logout() {
         auth.signOut()
     }
 
@@ -43,5 +46,18 @@ class FirebaseAuthDataSource @Inject constructor() {
 
     fun isUserAuthenticated(): Boolean {
         return auth.currentUser != null
+    }
+
+    fun signInWithCredential(credential: AuthCredential): Flow<Resource<FirebaseUser>> = flow {
+        emit(Resource.Loading())
+        try {
+            val result = auth.signInWithCredential(credential).await()
+            result.user?.let {
+                emit(Resource.Success(it))
+            } ?: emit(Resource.Error("Sign-in failed: No user returned"))
+        } catch (e: Exception) {
+            Log.e("FirebaseAuth", "Sign-in error", e)
+            emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
+        }
     }
 }

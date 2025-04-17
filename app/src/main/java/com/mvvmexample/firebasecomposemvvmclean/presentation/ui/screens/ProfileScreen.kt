@@ -89,7 +89,7 @@ fun ProfileScreen(
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
 
-                if (user.photoUrl.isNotEmpty()) {
+                if (user.photoUrl?.isNotEmpty() == true) {
                     AsyncImage(
                         model = user.photoUrl,
                         contentDescription = "Profile Picture",
